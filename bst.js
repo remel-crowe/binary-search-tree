@@ -57,6 +57,27 @@ function Tree() {
 
   function del(value) {}
 
+  function iBalanced() {}
+
+  function find(value) {
+    let currentNode = root;
+    while (currentNode) {
+      if (value > currentNode.data) {
+        currentNode = currentNode.right;
+      } else if (value < currentNode.data) {
+        currentNode = currentNode.left;
+      } else {
+        return currentNode;
+      }
+    }
+    return "Node Not Found";
+  }
+
+  function levelOrder(callback = null) {
+    let discoveredNodes = [];
+    let currentNode = root;
+  }
+
   const prettyPrint = (node, prefix = "", isLeft = true) => {
     if (node === null) {
       return;
@@ -70,7 +91,7 @@ function Tree() {
     }
   };
 
-  return { buildTree, sortAndRemove, prettyPrint, insert };
+  return { buildTree, sortAndRemove, prettyPrint, insert, find };
 }
 
 let bst = Tree();
@@ -82,3 +103,4 @@ bst.insert(10);
 bst.prettyPrint(tree);
 bst.insert(9);
 bst.prettyPrint(tree);
+console.log(bst.find(7));
