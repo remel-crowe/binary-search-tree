@@ -74,8 +74,22 @@ function Tree() {
   }
 
   function levelOrder(callback = null) {
-    let discoveredNodes = [];
-    let currentNode = root;
+    if (!root) return;
+    let queue = [];
+    queue.push(root);
+
+    while (queue.length > 0) {
+      let currentNode = queue.shift();
+      if (currentNode.left) {
+        queue.push(currentNode.left);
+      }
+      if (currentNode.right) {
+        queue.push(currentNode.right);
+      }
+      if (callback) {
+        callback(currentNode);
+      }
+    }
   }
 
   const prettyPrint = (node, prefix = "", isLeft = true) => {
@@ -91,16 +105,22 @@ function Tree() {
     }
   };
 
-  return { buildTree, sortAndRemove, prettyPrint, insert, find };
+  return {
+    buildTree,
+    sortAndRemove,
+    prettyPrint,
+    insert,
+    find,
+    levelOrder,
+  };
+}
+
+// Simple callback to test levelorder functionality
+function print(msg) {
+  console.log(msg);
 }
 
 let bst = Tree();
 let numArray = bst.sortAndRemove([4, 4, 5, 12, 64, 76, 29, 81, 32, 28, 19]);
 let tree = bst.buildTree(numArray, 0, numArray.length - 1);
 bst.prettyPrint(tree);
-
-bst.insert(10);
-bst.prettyPrint(tree);
-bst.insert(9);
-bst.prettyPrint(tree);
-console.log(bst.find(7));
