@@ -57,7 +57,20 @@ function Tree() {
 
   function del(value) {}
 
-  function iBalanced() {}
+  function isBalanced() {
+    let leftHeight = height(root.left);
+    let rightHeight = height(root.right);
+
+    if (
+      Math.abs(leftHeight - rightHeight) <= 1 &&
+      isBalanced(root.left) &&
+      isBalanced(root.right)
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   function find(value) {
     let currentNode = root;
@@ -70,7 +83,7 @@ function Tree() {
         return currentNode;
       }
     }
-    return "Node Not Found";
+    return null;
   }
 
   function levelOrder(callback = null) {
@@ -90,6 +103,68 @@ function Tree() {
         callback(currentNode);
       }
     }
+  }
+
+  function inOrder(root, callback = null) {
+    if (!root) return;
+    inOrder(root.left);
+    if (callback) {
+      callback(root);
+    } else {
+      console.log(root.data);
+    }
+    inOrder(root.right);
+  }
+
+  function postOrder(root, callback = null) {
+    if (!root) return;
+    postOrder(root.left);
+    postOrder(root.right);
+    if (callback) {
+      callback(root);
+    } else {
+      console.log(root.data);
+    }
+  }
+
+  function preOrder(root, callback = null) {
+    if (!root) return;
+    if (callback) {
+      callback(root);
+    } else {
+      console.log(root.data);
+    }
+    postOrder(root.left);
+    postOrder(root.right);
+  }
+
+  function height(value, count = 0) {
+    let node = find(value);
+    if (!node) {
+      return `${value} is not a node in this tree.`;
+    }
+    let leftHeight = node.left ? height(node.left.data, count + 1) : 0;
+    let rightHeight = node.right ? height(node.right.data, count + 1) : 0;
+
+    return Math.max(leftHeight, rightHeight) + 1;
+  }
+
+  function depth(value) {
+    let currentNode = root;
+    let count = 0;
+    let target = find(value);
+    if (!target) return `${value} is not a node in this tree`;
+
+    while (currentNode.data !== target.data) {
+      if (target.data > currentNode.data) {
+        currentNode = currentNode.right;
+        count += 1;
+      } else if (target.data < currentNode.data) {
+        currentNode = currentNode.left;
+        count += 1;
+      }
+    }
+    return count;
   }
 
   const prettyPrint = (node, prefix = "", isLeft = true) => {
@@ -112,6 +187,12 @@ function Tree() {
     insert,
     find,
     levelOrder,
+    inOrder,
+    postOrder,
+    preOrder,
+    height,
+    depth,
+    isBalanced,
   };
 }
 
@@ -120,7 +201,9 @@ function print(msg) {
   console.log(msg);
 }
 
-let bst = Tree();
-let numArray = bst.sortAndRemove([4, 4, 5, 12, 64, 76, 29, 81, 32, 28, 19]);
-let tree = bst.buildTree(numArray, 0, numArray.length - 1);
-bst.prettyPrint(tree);
+let tree = Tree();
+let numArray = tree.sortAndRemove([4, 4, 5, 12, 64, 76, 29, 81, 32, 28, 19]);
+let bTree = tree.buildTree(numArray, 0, numArray.length - 1);
+tree.prettyPrint(bTree);
+
+console.log(tree.height(4));
